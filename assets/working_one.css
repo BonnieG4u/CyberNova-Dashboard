@@ -1,0 +1,150 @@
+/* === GLOBAL THEME === */
+body {
+  background-color: #0b0e16;
+  color: #e0e0e0;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* === LAYOUT === */
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* === TABS === */
+.custom-tabs-container {
+    margin-bottom: 2rem;
+}
+
+.custom-tabs {
+    border-bottom: 1px solid #1e293b !important;
+}
+
+.custom-tab {
+    background-color: transparent !important;
+    color: #7f8fa6 !important;
+    border: none !important;
+    padding: 12px 24px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer;
+}
+
+.custom-tab--selected {
+    color: #00ffff !important;
+    border-bottom: 3px solid #00ffff !important;
+}
+
+/* === KPI CARD GRID === */
+.kpi-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.kpi-card {
+  background: linear-gradient(145deg, #141a26, #0e121b);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 255, 255, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 255, 255, 0.15);
+  border-color: rgba(0, 255, 255, 0.3);
+}
+
+.kpi-title {
+  font-size: 0.8rem;
+  color: #7f8fa6;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.kpi-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #00ffff;
+}
+
+/* === CHARTS === */
+.graph-container {
+  background-color: #10141f;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chart-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #e0e0e0;
+    margin-bottom: 1rem;
+}
+
+/* === TABLES === */
+.table-container {
+  background-color: #10141f;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.data-table .dash-spreadsheet-container {
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+
+/* Custom Table Styles */
+.dash-header {
+  background-color: #141a26 !important;
+  color: #00ffff !important;
+  font-weight: 600 !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.dash-cell {
+  background-color: #0e121b !important;
+  color: #e0e0e0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* === STATUS BADGES === */
+.status-healthy { color: #00ff99; font-weight: 600; }
+.status-warning { color: #ffcc00; font-weight: 600; }
+.status-critical { color: #ff4444; font-weight: 600; }
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .kpi-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #0b0e16;
+}
+::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+}

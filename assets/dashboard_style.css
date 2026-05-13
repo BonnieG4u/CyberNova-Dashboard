@@ -1,0 +1,170 @@
+/* === GLOBAL THEME === */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+body {
+  background-color: #010409;
+  color: #f0f6fc;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+/* === TABS === */
+.custom-tabs-container {
+    margin-bottom: 24px;
+}
+
+.custom-tabs {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.custom-tab {
+    background-color: transparent !important;
+    color: #8b949e !important;
+    border: none !important;
+    padding: 12px 24px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+.custom-tab--selected {
+    color: #58a6ff !important;
+    border-bottom: 2px solid #58a6ff !important;
+}
+
+/* === KPI CARDS === */
+.kpi-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: rgba(13, 17, 23, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.kpi-card:hover {
+  border-color: rgba(56, 139, 253, 0.4);
+}
+
+.kpi-label {
+  color: #8b949e;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.kpi-value {
+  color: #ffffff;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.kpi-delta {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.delta-up { color: #3fb950; }
+.delta-down { color: #f85149; }
+
+.kpi-icon-box {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #58a6ff;
+}
+
+/* Accent colors for icons */
+.icon-cyan { color: #00ffff; text-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
+.icon-purple { color: #a855f7; text-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
+.icon-green { color: #3fb950; text-shadow: 0 0 10px rgba(63, 185, 80, 0.5); }
+.icon-red { color: #f85149; text-shadow: 0 0 10px rgba(248, 81, 73, 0.5); }
+
+/* === CHARTS === */
+.graph-container {
+  background: #0d1117;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  height: 100%;
+}
+
+.chart-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.chart-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #f0f6fc;
+}
+
+.streaming-label {
+    font-size: 0.75rem;
+    color: #3fb950;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #3fb950;
+    border-radius: 50%;
+    margin-right: 6px;
+    box-shadow: 0 0 8px #3fb950;
+}
+
+/* === TABLES === */
+.table-card {
+    background: #0d1117;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 24px;
+}
+
+.dash-header {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+  color: #f0f6fc !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+}
+
+.dash-cell {
+  background-color: transparent !important;
+  color: #8b949e !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  font-size: 13px !important;
+}
