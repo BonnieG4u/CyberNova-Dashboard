@@ -1,1 +1,1 @@
-web: gunicorn CyberNova-Dashboard:server
+web: gunicorn app:server
