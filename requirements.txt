@@ -6,3 +6,4 @@ openpyxl
 dash-bootstrap-components
 scikit-learn
 gunicorn
+streamlit
