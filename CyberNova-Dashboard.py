@@ -231,6 +231,7 @@ EXEC_FILTER = html.Div([
 app = Dash(__name__, suppress_callback_exceptions=True,
            external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.title = "CyberNova Intelligence"
+server = app.server
 
 app.layout = html.Div([
     dcc.Location(id="url"),
