@@ -230,7 +230,7 @@ EXEC_FILTER = html.Div([
 
 app = Dash(__name__, suppress_callback_exceptions=True,
            external_stylesheets=[dbc.themes.BOOTSTRAP])
-app.title = "CyberNova Intelligence"
+app.title = "CyberNova Dashboard"
 server = app.server
 
 app.layout = html.Div([
