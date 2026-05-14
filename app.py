@@ -347,7 +347,14 @@ def _overview_page(telemetry, years, months):
     modern_theme(telem)
     svc = fdf["Services"].value_counts().head(4)
     donut = px.pie(names=svc.index, values=svc.values, hole=0.7, color_discrete_sequence=["#10b981","#f59e0b","#ef4444","#64748b"])
-    donut.update_layout(showlegend=False, paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", margin=dict(t=0,b=0,l=0,r=0))
+    donut.update_layout(
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="top", y=-0.05, xanchor="center", x=0.5, font=dict(size=10)),
+        paper_bgcolor="rgba(0,0,0,0)", 
+        plot_bgcolor="rgba(0,0,0,0)", 
+        margin=dict(t=0,b=40,l=0,r=0),
+        font_color="#94a3b8"
+    )
     endpoint_rows = [html.Div([html.Div("SERVICE"),html.Div("REGION"),html.Div("LATENCY"),html.Div("STATUS")], className="table-row table-header-row")]
     for _, row in fdf[["Services","Region","Latency"]].tail(6).iterrows():
         cls = "badge-healthy" if row["Latency"] < 150 else "badge-warning"
