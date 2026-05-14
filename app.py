@@ -152,7 +152,7 @@ def make_sidebar(path):
     return html.Div([
         html.Div([
             html.Div(className="logo-box"),
-            html.Div([html.Div("CYBERNOVA", style={"fontWeight":"800","fontSize":"1.1rem"}), html.Div("INTELLIGENCE",style={"fontSize":"0.6rem","letterSpacing":"0.2em","color":"var(--text-muted)"})]),
+            html.Div([html.Div("CYBERNOVA", style={"fontWeight":"800","fontSize":"1.1rem"})]),
         ], className="sidebar-logo"),
         
         html.Div("ADMINISTRATION", className="nav-section"),
@@ -379,19 +379,59 @@ def classify_health(score):
 
 def _health_page(years, months):
     fdf = filter_dataframe(df, years=years, months=months)
-    if fdf.empty: return html.Div("No data.", style={"padding":"20px"})
+    if fdf.empty: return html.Div("No data for the selected period.", style={"padding":"40px", "textAlign":"center", "color":"var(--text-muted)"})
+    
+    # Current Metrics
     plat_score = max(0, 100 - ((fdf["CPU_Avg"].mean() + fdf["Memory_Usage"].mean() + min(fdf["Latency"].mean()/5, 100)) / 3))
-    plat_txt, plat_col = classify_health(plat_score)
     db_score = max(0, 100 - ((min(fdf["Storage_Used_GB"].mean()/100, 100) + min(fdf["Query_Latency"].mean(), 100)) / 2))
-    db_txt, db_col = classify_health(db_score)
     api_score = max(0, 100 - ((min(fdf["API_Latency"].mean()/3, 100) + min(fdf["Error_Rate"].mean()*20, 100)) / 2))
+    
+    plat_txt, plat_col = classify_health(plat_score)
+    db_txt, db_col = classify_health(db_score)
     api_txt, api_col = classify_health(api_score)
+
+    # Simple Trend Mock (comparing current average to global average for better contrast)
+    global_avg = 75 # Hypothetical baseline
+    plat_up = plat_score > global_avg
+    db_up = db_score > global_avg
+    api_up = api_score > global_avg
+
     kpis = html.Div([
-        kpi_card("PLATFORM HEALTH", plat_txt, f"{plat_score:.0f}% Score", True, "🖥️", plat_col),
-        kpi_card("DATABASE HEALTH", db_txt, f"{db_score:.0f}% Score", True, "🗄️", db_col),
-        kpi_card("API HEALTH", api_txt, f"{api_score:.0f}% Score", True, "🌐", api_col),
+        kpi_card("PLATFORM HEALTH", plat_txt, f"{plat_score:.0f}% Score", plat_up, "🖥️", plat_col),
+        kpi_card("DATABASE HEALTH", db_txt, f"{db_score:.0f}% Score", db_up, "🗄️", db_col),
+        kpi_card("API HEALTH", api_txt, f"{api_score:.0f}% Score", api_up, "🌐", api_col),
     ], className="kpi-row", style={"gridTemplateColumns": "repeat(3, 1fr)"})
-    return html.Div([kpis]) # Minified for space, visuals exist in previous turn
+
+    # Health Score Over Time Chart
+    # Group by Year/Month to show trend
+    trend_df = fdf.groupby(["Year", "Month"]).agg({
+        "CPU_Avg": "mean", "Memory_Usage": "mean", "Latency": "mean",
+        "Query_Latency": "mean", "Error_Rate": "mean"
+    }).reset_index()
+    
+    # Calculate synthetic health scores for the trend
+    trend_df["Health_Score"] = 100 - ((trend_df["CPU_Avg"] + trend_df["Memory_Usage"] + (trend_df["Latency"]/5)) / 3)
+    trend_df["Date"] = pd.to_datetime(trend_df.Year.astype(str) + '-' + trend_df.Month.astype(str) + '-01')
+    trend_df = trend_df.sort_values("Date")
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=trend_df["Date"], y=trend_df["Health_Score"], name="Health Index", 
+                             line=dict(color="#22d3ee", width=3), fill='tozeroy'))
+    fig.add_trace(go.Bar(x=trend_df["Date"], y=trend_df["Error_Rate"]*10, name="Error Factor (Scaled)", 
+                         marker_color="rgba(239, 68, 68, 0.3)"))
+    modern_theme(fig)
+    fig.update_layout(height=400)
+
+    return html.Div([
+        kpis,
+        html.Div([
+            html.Div([
+                card_hdr("Health Index History"),
+                dcc.Graph(figure=fig, config={"displayModeBar": False})
+            ], className="content-card")
+        ], className="content-grid", style={"gridTemplateColumns": "1fr", "marginTop": "20px"})
+    ])
+
 
 def _infra_page(regions, roles, statuses, years, months):
     fdf = filter_dataframe(df, years=years, months=months, regions=regions, roles=roles)
