@@ -501,19 +501,21 @@ def _sales_overview_page(regions, industries):
     fdf = filter_dataframe(df, regions=regions, industries=industries)
     if fdf.empty: return html.Div("No data matches.", style={"padding":"40px"})
 
-    leads     = len(fdf)
-    clients   = len(fdf[fdf["Conversion"] == 1]) if "Conversion" in fdf.columns else 0
-    enquiries = int(fdf["Enquiries"].sum())
-    conv_rate = (clients / leads * 100) if leads else 0
-    campaigns = fdf["Campaign"].nunique()
-    ctr       = fdf["CTR"].mean()
+    # Updated calculations based on Sales_Amount
+    leads       = len(fdf)
+    clients     = len(fdf[fdf["Sales_Amount"] > 0])
+    top_clients = len(fdf[fdf["Sales_Amount"] > 5000])
+    enquiries   = int(fdf["Enquiries"].sum())
+    conv_rate   = (clients / leads * 100) if leads else 0
+    campaigns   = fdf["Campaign"].nunique()
+    ctr         = fdf["CTR"].mean()
 
     kpis = html.Div([
         kpi_card("TOTAL LEADS",      f"{leads:,}",         "5%",    True,  "👥", "accent-purple"),
         kpi_card("TOTAL CLIENTS",    f"{clients:,}",       "3%",    True,  "🤝", "accent-cyan"),
+        kpi_card("TOP CLIENTS (>5K)",f"{top_clients:,}",   "8%",    True,  "💎", "accent-green"),
         kpi_card("ENQUIRIES",        f"{enquiries:,}",     "8%",    True,  "✉️", "accent-orange"),
         kpi_card("CONVERSION RATE",  f"{conv_rate:.1f}%",  "2%",    True,  "🎯", "accent-green"),
-        kpi_card("ACTIVE CAMPAIGNS", f"{campaigns}",       "1",     True,  "📢", "accent-purple"),
         kpi_card("AVG CTR",          f"{ctr:.1f}%",        "0.5%",  True,  "🖱️", "accent-cyan"),
     ], className="kpi-row")
 
@@ -541,11 +543,13 @@ def _sales_overview_page(regions, industries):
     modern_theme(reg_fig)
 
     # Predictive Lead Scoring Table (Logistic Regression output)
-    tbl_rows = [html.Div([html.Div("ORGANISATION"),html.Div("SERVICE"),html.Div("SCORE"),html.Div("PROBABILITY")], className="table-row table-header-row")]
-    for _, r in fdf.sort_values(by="Lead_Probability", ascending=False).head(8).iterrows():
+    tbl_rows = [html.Div([html.Div("ORGANISATION"),html.Div("SERVICE"),html.Div("SCORE"),html.Div("PAY")], className="table-row table-header-row")]
+    # Filter out empty organizations or "Total" rows
+    valid_fdf = fdf[fdf["Organization"].notna() & (fdf["Organization"].astype(str).str.strip() != "")]
+    for _, r in valid_fdf.sort_values(by="Sales_Amount", ascending=False).head(8).iterrows():
         prob = r["Lead_Probability"]
         col = "accent-green" if prob > 70 else ("accent-orange" if prob > 40 else "accent-red")
-        tbl_rows.append(html.Div([html.Div(r["Organization"]), html.Div(r["Services"]), html.Div(f"{r['Lead_Score']:.0f}", style={"color": f"var(--{col})"}), html.Div(f"{prob:.1f}%", style={"color": f"var(--{col})"})], className="table-row", style={"gridTemplateColumns":"2fr 2fr 1fr 1fr"}))
+        tbl_rows.append(html.Div([html.Div(r["Organization"]), html.Div(r["Services"]), html.Div(f"{r['Lead_Score']:.0f}", style={"color": f"var(--{col})"}), html.Div(f"${r['Sales_Amount']:,.0f}", style={"color": f"var(--{col})"})], className="table-row", style={"gridTemplateColumns":"2fr 2fr 1fr 1fr"}))
 
     return html.Div([kpis,
         html.Div([
@@ -557,7 +561,7 @@ def _sales_overview_page(regions, industries):
             html.Div([card_hdr("Service Popularity"), dcc.Graph(figure=svc_fig, config={"displayModeBar":False})], className="content-card"),
         ], className="content-grid", style={"gridTemplateColumns":"5fr 5fr"}),
         html.Div([
-            html.Div([card_hdr("Predictive Lead Scoring (Logistic Regression)"), html.Div(tbl_rows, className="endpoint-table", style={"--cols":"2fr 2fr 1fr 1fr"})], className="content-card"),
+            html.Div([card_hdr("Top Revenue Contributors"), html.Div(tbl_rows, className="endpoint-table", style={"--cols":"2fr 2fr 1fr 1fr"})], className="content-card"),
             html.Div([card_hdr("Lead Distribution"), dcc.Graph(figure=reg_fig, config={"displayModeBar":False})], className="content-card")
         ], className="secondary-grid")
     ])
